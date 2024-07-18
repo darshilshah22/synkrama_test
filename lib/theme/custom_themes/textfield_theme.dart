@@ -7,7 +7,7 @@ class BTextFormFieldTheme {
   BTextFormFieldTheme._();
 
   static InputDecorationTheme inputDecorationTheme = InputDecorationTheme(
-    errorMaxLines: 3,
+    errorMaxLines: 4,
     prefixIconColor: ColorConstants.textLight,
     suffixIconColor: ColorConstants.textLight,
     alignLabelWithHint: true,

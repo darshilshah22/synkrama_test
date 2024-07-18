@@ -26,26 +26,25 @@ PreferredSizeWidget customAppBar(BuildContext context,
                 if (isPop)
                   Align(
                       alignment: Alignment.centerLeft,
-                      child: buildIcon(context)),
-                if(title.isNotEmpty)
-                Align(
-                  alignment: Alignment.center,
-                  child: Text(
-                    title,
-                    style: BTextTheme.textTheme.titleMedium!
-                        .copyWith(fontSize: 20),
+                      child:
+                          buildIcon(context, icon: Icons.arrow_back_rounded)),
+                if (title.isNotEmpty)
+                  Align(
+                    alignment: Alignment.center,
+                    child: Text(
+                      title,
+                      style: BTextTheme.textTheme.titleMedium!
+                          .copyWith(fontSize: 20),
+                    ),
                   ),
-                ),
                 if (actions != null)
                   Align(
                     alignment: Alignment.centerRight,
-                    child: IconButton(
-                      icon: const Icon(Icons.search, color: Colors.white),
-                      onPressed: () {
-                        // Handle search button press
-                      },
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: actions,
                     ),
-                  ),
+                  )
               ],
             ),
           ),
@@ -55,63 +54,78 @@ PreferredSizeWidget customAppBar(BuildContext context,
   );
 }
 
-Widget buildIcon(BuildContext context) {
+Widget buildIcon(BuildContext context, {required IconData icon}) {
   return Container(
     padding: const EdgeInsets.all(BSizes.md - 2),
     decoration: BoxDecoration(
       color: ColorConstants.bgColor1,
       shape: BoxShape.circle,
     ),
-    child: const Icon(
-      Icons.arrow_back_rounded,
+    child: Icon(
+      icon,
       color: Colors.white,
       size: BSizes.xl,
     ),
   );
 }
 
-Widget buildTextField(
-    {required TextEditingController controller,
-    required String hint,
-    bool isSuffix = false,
-    bool isObscure = false,
-    TextInputType? keyboardType,
-    VoidCallback? onSuffixTap}) {
+Widget buildTextField({
+  required TextEditingController controller,
+  required String hint,
+  bool isSuffix = false,
+  bool isObscure = false,
+  bool isCapitalization = false,
+  TextInputType? keyboardType,
+  VoidCallback? onSuffixTap,
+  String? Function(String?)? validator,
+}) {
   return TextFormField(
     style: BTextTheme.detailsTitleStyle,
     cursorColor: ColorConstants.textLight,
     obscureText: isObscure,
     keyboardType: keyboardType ?? TextInputType.text,
+    autovalidateMode: AutovalidateMode.onUserInteraction,
+    textCapitalization: isCapitalization
+        ? TextCapitalization.sentences
+        : TextCapitalization.none,
+    validator: validator,
     decoration: InputDecoration(
       hintText: hint,
-      suffixIcon: isSuffix ? InkWell(
-        overlayColor: const WidgetStatePropertyAll(Colors.transparent),
-        onTap: onSuffixTap,
-        child: Padding(
-          padding: const EdgeInsets.only(right: 8.0),
-          child: Icon(
-            isObscure ? Icons.visibility_off_outlined : Icons.visibility_outlined,
-            color: ColorConstants.textLight.withOpacity(0.5),
-          ),
-        ),
-      ) : const SizedBox(),
+      suffixIcon: isSuffix
+          ? InkWell(
+              overlayColor: const WidgetStatePropertyAll(Colors.transparent),
+              onTap: onSuffixTap,
+              child: Padding(
+                padding: const EdgeInsets.only(right: 8.0),
+                child: Icon(
+                  isObscure
+                      ? Icons.visibility_off_outlined
+                      : Icons.visibility_outlined,
+                  color: ColorConstants.textLight.withOpacity(0.5),
+                ),
+              ),
+            )
+          : const SizedBox(),
     ),
   );
 }
 
 Widget buttonWidget(
     {required String title, Color? color, required VoidCallback onTap}) {
-  return Container(
-    alignment: Alignment.center,
-    margin: const EdgeInsets.symmetric(horizontal: 4),
-    padding: const EdgeInsets.all(BSizes.defaultSpace - 4),
-    decoration: BoxDecoration(
-        color: color ?? ColorConstants.primaryColor,
-        borderRadius: BorderRadius.circular(60)),
-    child: Text(
-      title,
-      style: BTextTheme.bigTitle.copyWith(
-          color: ColorConstants.textDark, fontWeight: FontWeight.w600),
+  return customInkwell(
+    onTap: onTap,
+    child: Container(
+      alignment: Alignment.center,
+      margin: const EdgeInsets.symmetric(horizontal: 4),
+      padding: const EdgeInsets.all(BSizes.defaultSpace - 4),
+      decoration: BoxDecoration(
+          color: color ?? ColorConstants.primaryColor,
+          borderRadius: BorderRadius.circular(60)),
+      child: Text(
+        title,
+        style: BTextTheme.bigTitle.copyWith(
+            color: ColorConstants.textDark, fontWeight: FontWeight.w600),
+      ),
     ),
   );
 }

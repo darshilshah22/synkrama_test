@@ -12,7 +12,7 @@ class BSizes {
   static const double iconMd = 24.0;
   static const double iconLg = 32.0;
 
-  static const double appBarHeight = 56.0;
+  static const double appBarHeight = 76.0;
 
   static const double smallSpace = 8.0;
   static const double mediumSpace = 12.0;

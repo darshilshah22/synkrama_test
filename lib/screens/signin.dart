@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:synkrama_test/constants/color_constants.dart';
+import 'package:synkrama_test/constants/helpers.dart';
 import 'package:synkrama_test/routing/routes.dart';
 import 'package:synkrama_test/theme/custom_themes/text_theme.dart';
 import 'package:synkrama_test/theme/sizes.dart';
@@ -16,11 +17,11 @@ class Signin extends StatefulWidget {
 class _SigninState extends State<Signin> {
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // appBar: customAppBar(context, title: "Sign In", isPop: false),
       bottomNavigationBar: customInkwell(
         onTap: () {
           Navigator.pushNamed(context, Routes.signUpRoute);
@@ -61,38 +62,69 @@ class _SigninState extends State<Signin> {
               right: BSizes.defaultSpace,
               bottom: BSizes.defaultSpace,
             ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Text(
-                  "Hello Again!",
-                  style: BTextTheme.textTheme.titleLarge!.copyWith(
-                    fontWeight: FontWeight.w500,
-                    fontSize: 36,
+            child: Form(
+              key: _formKey,
+              autovalidateMode: AutovalidateMode.onUserInteraction,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text(
+                    "Hello Again!",
+                    style: BTextTheme.textTheme.titleLarge!.copyWith(
+                      fontWeight: FontWeight.w500,
+                      fontSize: 36,
+                    ),
                   ),
-                ),
-                const SizedBox(height: BSizes.smallSpace),
-                Text(
-                  "Welcome back you've\nbeen missed!",
-                  textAlign: TextAlign.center,
-                  style: BTextTheme.textTheme.titleMedium!.copyWith(
-                    fontWeight: FontWeight.w400,
+                  const SizedBox(height: BSizes.smallSpace),
+                  Text(
+                    "Welcome back you've\nbeen missed!",
+                    textAlign: TextAlign.center,
+                    style: BTextTheme.textTheme.titleMedium!.copyWith(
+                      fontWeight: FontWeight.w400,
+                    ),
                   ),
-                ),
-                const SizedBox(height: BSizes.spaceBtwSections * 2),
-                buildTextField(controller: emailController, hint: "Email"),
-                const SizedBox(height: BSizes.defaultSpace),
-                buildTextField(
+                  const SizedBox(height: BSizes.spaceBtwSections * 2),
+                  buildTextField(
+                    controller: emailController,
+                    hint: "Email",
+                    validator: (val) {
+                      if (val!.isEmpty) {
+                        return "Please enter email";
+                      } else if (!val.isValidEmail()) {
+                        return "Please enter valid email";
+                      }
+
+                      return null;
+                    },
+                  ),
+                  const SizedBox(height: BSizes.defaultSpace),
+                  buildTextField(
                     controller: passwordController,
                     hint: "Password",
-                    isSuffix: true),
-                const SizedBox(height: BSizes.defaultSpace * 2),
-                buttonWidget(title: "Sign In", onTap: () {}),
-                const SizedBox(height: BSizes.sm + 2),
-                buildForgotPassword(),
-                const SizedBox(height: BSizes.defaultSpace * 2),
-                buildSocialLogin()
-              ],
+                    isSuffix: true,
+                    validator: (val) {
+                      if (val!.isEmpty) {
+                        return "Please enter password";
+                      } else if(validatePassword(val) != null){
+                        return validatePassword(val);
+                      }
+
+                      return null;
+                    },
+                  ),
+                  const SizedBox(height: BSizes.defaultSpace * 2),
+                  buttonWidget(
+                      title: "Sign In",
+                      onTap: () {
+                        Navigator.pushNamedAndRemoveUntil(
+                            context, Routes.bottomRoute, (route) => false);
+                      }),
+                  const SizedBox(height: BSizes.sm + 2),
+                  buildForgotPassword(),
+                  const SizedBox(height: BSizes.defaultSpace * 2),
+                  buildSocialLogin()
+                ],
+              ),
             ),
           ),
         ),

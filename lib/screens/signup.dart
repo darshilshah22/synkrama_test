@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:synkrama_test/constants/helpers.dart';
 
 import '../constants/color_constants.dart';
 import '../theme/custom_themes/text_theme.dart';
@@ -56,7 +57,8 @@ class _SignUpState extends State<SignUp> {
             margin: const EdgeInsets.only(
                 top: BSizes.spaceBtwSections * 2,
                 left: BSizes.defaultSpace,
-                right: BSizes.defaultSpace, bottom: BSizes.defaultSpace),
+                right: BSizes.defaultSpace,
+                bottom: BSizes.defaultSpace),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
@@ -77,17 +79,52 @@ class _SignUpState extends State<SignUp> {
                 const SizedBox(height: BSizes.spaceBtwSections * 2),
                 buildTextField(controller: nameController, hint: "Name"),
                 const SizedBox(height: BSizes.defaultSpace),
-                buildTextField(controller: emailController, hint: "Email", keyboardType: TextInputType.emailAddress),
+                buildTextField(
+                  controller: emailController,
+                  keyboardType: TextInputType.emailAddress,
+                  hint: "Email",
+                  validator: (val) {
+                    if (val!.isEmpty) {
+                      return "Please enter email";
+                    } else if (!val.isValidEmail()) {
+                      return "Please enter valid email";
+                    }
+
+                    return null;
+                  },
+                ),
                 const SizedBox(height: BSizes.defaultSpace),
                 buildTextField(
-                    controller: passwordController,
-                    hint: "Password",
-                    isSuffix: true, keyboardType: TextInputType.visiblePassword),
+                  controller: passwordController,
+                  hint: "Password",
+                  isSuffix: true,
+                  keyboardType: TextInputType.visiblePassword,
+                  validator: (val) {
+                    if (val!.isEmpty) {
+                      return "Please enter password";
+                    } else if (validatePassword(val) != null) {
+                      return validatePassword(val);
+                    }
+
+                    return null;
+                  },
+                ),
                 const SizedBox(height: BSizes.defaultSpace),
                 buildTextField(
-                    controller: cfPasswordController,
-                    hint: "Confirm password",
-                    isSuffix: true, keyboardType: TextInputType.visiblePassword),
+                  controller: cfPasswordController,
+                  hint: "Confirm password",
+                  isSuffix: true,
+                  keyboardType: TextInputType.visiblePassword,
+                  validator: (val) {
+                    if (val!.isEmpty) {
+                      return "Please enter confirm password";
+                    } else if (val != passwordController.text) {
+                      return "Password and Confirm password should be matched";
+                    }
+
+                    return null;
+                  },
+                ),
                 const SizedBox(height: BSizes.defaultSpace * 2),
                 buttonWidget(title: "Sign In", onTap: () {}),
               ],
