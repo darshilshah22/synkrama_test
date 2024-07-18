@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:synkrama_test/constants/color_constants.dart';
 import 'package:synkrama_test/constants/constants.dart';
+import 'package:synkrama_test/prefs/prefs_functions.dart';
+import 'package:synkrama_test/routing/routes.dart';
 import 'package:synkrama_test/theme/custom_themes/text_theme.dart';
 import 'package:synkrama_test/theme/sizes.dart';
 
@@ -21,12 +23,18 @@ class _DashboardState extends State<Dashboard> {
         context,
         isPop: false,
         title: "Dashboard",
-        // actions: [
-        //   buildIcon(
-        //     context,
-        //     icon: Icons.notifications,
-        //   ),
-        // ],
+        actions: [
+          customInkwell(
+            onTap: (){
+              PreferenceHelper.clearPreference();
+              Navigator.pushNamedAndRemoveUntil(context, Routes.signInRoute, (route) => false);
+            },
+            child: buildIcon(
+              context,
+              icon: Icons.logout,
+            ),
+          ),
+        ],
       ),
       body: SafeArea(
         child: SingleChildScrollView(

@@ -1,5 +1,7 @@
 import 'package:synkrama_test/constants/image_constants.dart';
 
+import '../models/user_model.dart';
+
 List<String> imagesList = [
   Images.alien1,
   Images.alien2,
@@ -14,3 +16,5 @@ List<String> imagesList = [
   Images.human3,
   Images.human4,
 ];
+
+List<User> usersList = [];

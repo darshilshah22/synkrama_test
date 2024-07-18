@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:synkrama_test/constants/color_constants.dart';
 import 'package:synkrama_test/theme/sizes.dart';
+import 'package:toastification/toastification.dart';
 
 import '../theme/custom_themes/text_theme.dart';
 
@@ -77,14 +78,17 @@ Widget buildTextField({
   bool isCapitalization = false,
   TextInputType? keyboardType,
   VoidCallback? onSuffixTap,
+  TextInputAction? textInputAction,
   String? Function(String?)? validator,
 }) {
   return TextFormField(
+    controller: controller,
     style: BTextTheme.detailsTitleStyle,
     cursorColor: ColorConstants.textLight,
     obscureText: isObscure,
     keyboardType: keyboardType ?? TextInputType.text,
     autovalidateMode: AutovalidateMode.onUserInteraction,
+    textInputAction: textInputAction ?? TextInputAction.next,
     textCapitalization: isCapitalization
         ? TextCapitalization.sentences
         : TextCapitalization.none,
@@ -135,5 +139,16 @@ Widget customInkwell({required Widget child, void Function()? onTap}) {
     overlayColor: const WidgetStatePropertyAll(Colors.transparent),
     onTap: onTap,
     child: child,
+  );
+}
+
+void showToast({String title = "", String description = "", bool isError = true}) {
+  toastification.show(
+    type: isError ? ToastificationType.error : ToastificationType.success,
+    alignment: Alignment.bottomCenter,
+    autoCloseDuration: const Duration(seconds: 3),
+    borderSide: BorderSide(color: isError ? Colors.red : ColorConstants.primaryColor),
+    title: Text(title),
+    description: Text(description),
   );
 }
